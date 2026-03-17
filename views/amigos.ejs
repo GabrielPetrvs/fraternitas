@@ -18,13 +18,13 @@
   </div>
   <div>
     <div class="panel">
-      <div class="panel-header">meus irmãos (<%= irmãos.length %>)</div>
+      <div class="panel-header">meus irmãos (<%= amigos.length %>)</div>
       <div class="panel-body">
-        <% if (irmãos.length === 0) { %>
+        <% if (amigos.length === 0) { %>
           <p style="font-size:12px;color:#888;">você ainda não tem irmãos. <a href="/buscar">busque pessoas!</a></p>
         <% } else { %>
           <div class="friend-grid cols4">
-          <% irmãos.forEach(function(a) { %>
+          <% amigos.forEach(function(a) { %>
             <div class="friend-item">
               <a href="/perfil/<%= a.id %>">
                 <div class="friend-avatar" style="background:#4a90d4;width:56px;height:56px;font-size:20px;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>

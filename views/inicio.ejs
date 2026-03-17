@@ -101,11 +101,11 @@
     <div class="panel">
       <div class="panel-header">meus irmãos</div>
       <div class="panel-body">
-        <% if (irmãos.length === 0) { %>
+        <% if (amigos.length === 0) { %>
           <p style="font-size:11px;color:#888;">nenhum irmão ainda!</p>
         <% } else { %>
           <div class="friend-grid">
-          <% irmãos.slice(0,6).forEach(function(a) { %>
+          <% amigos.slice(0,6).forEach(function(a) { %>
             <div class="friend-item">
               <a href="/perfil/<%= a.id %>">
                 <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
@@ -121,10 +121,10 @@
     <div class="panel">
       <div class="panel-header">minhas grupos</div>
       <div class="panel-body">
-        <% if (grupos.length === 0) { %>
+        <% if (comunidades.length === 0) { %>
           <p style="font-size:11px;color:#888;">nenhuma ainda!</p>
         <% } else { %>
-          <% grupos.forEach(function(c) { %>
+          <% comunidades.forEach(function(c) { %>
           <div class="comm-item">
             <div class="comm-icon"><%= c.icone %></div>
             <div><div class="comm-name"><a href="/comunidade/<%= c.id %>"><%= c.nome %></a></div></div>
