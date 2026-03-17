@@ -33,8 +33,8 @@ const PORT = process.env.PORT || 3000;
 
 initDb().then(() => {
   app.listen(PORT, () => {
-    console.log(`\n✅ Orkut rodando em http://localhost:${PORT}\n`);
+    console.log('\n✅ Fraternitas rodando em http://localhost:' + PORT + '\n');
   });
-}).catch(err => {
+}).catch(function(err) {
   console.error('Erro ao iniciar banco de dados:', err);
 });
