@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head><meta charset="UTF-8"><title>Fraternitas - <%= com.nome %></title><link rel="stylesheet" href="/css/style.css"></head>
 <body>
-<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar amigos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
 <div id="page">
 <div class="layout2col">
   <div>
@@ -14,9 +14,9 @@
         <% if (com.descricao) { %><div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5"><%= com.descricao %></div><% } %>
         <div style="margin-top:12px;">
           <% if (ehMembro) { %>
-          <form method="POST" action="/comunidade/sair"><input type="hidden" name="grupo_id" value="<%= com.id %>"><button class="btn btn-secondary">sair da grupo</button></form>
+          <form method="POST" action="/comunidade/sair"><input type="hidden" name="comunidade_id" value="<%= com.id %>"><button class="btn btn-secondary">sair da comunidade</button></form>
           <% } else { %>
-          <form method="POST" action="/comunidade/entrar"><input type="hidden" name="grupo_id" value="<%= com.id %>"><button class="btn btn-primary">entrar na grupo!</button></form>
+          <form method="POST" action="/comunidade/entrar"><input type="hidden" name="comunidade_id" value="<%= com.id %>"><button class="btn btn-primary">entrar na comunidade!</button></form>
           <% } %>
         </div>
       </div>
@@ -43,9 +43,9 @@
       <div class="panel-header">novo tópico</div>
       <div class="panel-body">
         <form method="POST" action="/topico/criar">
-          <input type="hidden" name="grupo_id" value="<%= com.id %>">
+          <input type="hidden" name="comunidade_id" value="<%= com.id %>">
           <div class="form-group"><label>título</label><input type="text" name="titulo" required></div>
-          <div class="form-group"><label>mensagem</label><textarea name="texto" required></textarea></div>
+          <div class="form-group"><label>scrap</label><textarea name="texto" required></textarea></div>
           <button type="submit" class="btn btn-primary">criar tópico</button>
         </form>
       </div>
