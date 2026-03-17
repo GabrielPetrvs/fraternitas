@@ -1,13 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const { prepare } = require('../db');
+const { getDb, saveDb } = require('../database');
 
 function auth(req, res, next) {
   if (!req.session.usuario) return res.redirect('/');
   next();
 }
 
+// Add visto column if not exists
+function ensureVistoColumn() {
+  try {
+    getDb().run("ALTER TABLE amizades ADD COLUMN visto INTEGER DEFAULT 0");
+    saveDb();
+  } catch(e) {}
+}
+
 router.get('/inicio', auth, (req, res) => {
+  ensureVistoColumn();
   const uid = req.session.usuario.id;
 
   const amigos = prepare(`
@@ -36,18 +46,23 @@ router.get('/inicio', auth, (req, res) => {
     WHERE a.amigo_id = ? AND a.status = 'pendente'
   `).all(uid);
 
-  const aceitaram = prepare(`
-    SELECT u.id, u.nome FROM amizades a
-    JOIN users u ON u.id = a.amigo_id
-    WHERE a.user_id = ? AND a.status = 'aceito' AND a.visto = 0
-  `).all(uid);
+  let aceitaram = [];
+  try {
+    aceitaram = prepare(`
+      SELECT u.id, u.nome FROM amizades a
+      JOIN users u ON u.id = a.amigo_id
+      WHERE a.user_id = ? AND a.status = 'aceito' AND a.visto = 0
+    `).all(uid);
+  } catch(e) {}
 
   res.render('inicio', { amigos, scrapsRecentes, comunidades, solicitacoes, aceitaram });
 });
 
 router.post('/notificacao/vista', auth, (req, res) => {
   const uid = req.session.usuario.id;
-  prepare("UPDATE amizades SET visto = 1 WHERE user_id = ? AND status = 'aceito'").run(uid);
+  try {
+    prepare("UPDATE amizades SET visto = 1 WHERE user_id = ? AND status = 'aceito'").run(uid);
+  } catch(e) {}
   res.redirect('/inicio');
 });
 
