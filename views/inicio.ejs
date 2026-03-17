@@ -53,6 +53,23 @@
   </div>
 
   <div>
+        <% if (typeof aceitaram !== 'undefined' && aceitaram.length > 0) { %>
+    <div class="panel">
+      <div class="panel-header" style="background:linear-gradient(to bottom,#c8a830,#a07820);color:#fff;">🎉 novas amizades aceitas!</div>
+      <div class="panel-body">
+        <% aceitaram.forEach(function(a) { %>
+        <div class="solicitacao-item">
+          <span><a href="/perfil/<%= a.id %>"><%= a.nome %></a> aceitou seu pedido de amizade! 🎉</span>
+        </div>
+        <% }) %>
+        <div style="margin-top:8px;">
+          <form method="POST" action="/notificacao/vista">
+            <button type="submit" class="btn btn-secondary" style="font-size:11px;">marcar como visto</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <% } %>
     <% if (solicitacoes.length > 0) { %>
     <div class="panel">
       <div class="panel-header">⚠️ solicitações de amizade (<%= solicitacoes.length %>)</div>
