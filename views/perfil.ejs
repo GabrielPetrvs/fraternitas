@@ -17,7 +17,7 @@
     <nav>
       <a href="/inicio">início</a>
       <a href="/perfil">meu perfil</a>
-      <a href="/irmãos">irmãos</a>
+      <a href="/amigos">irmãos</a>
       <a href="/comunidades">grupos</a>
       <a href="/sair">sair</a>
     </nav>
@@ -54,14 +54,14 @@
     <div class="panel">
       <div class="panel-body" style="display:flex;flex-direction:column;gap:6px;">
         <% if (!amizade) { %>
-          <form method="POST" action="/irmão/adicionar">
+          <form method="POST" action="/amigo/adicionar">
             <input type="hidden" name="irmão_id" value="<%= perfil.id %>">
             <button class="btn btn-primary" style="width:100%">+ adicionar irmão</button>
           </form>
         <% } else if (amizade.status === 'pendente') { %>
           <span style="font-size:12px;color:#888;">solicitação enviada</span>
         <% } else { %>
-          <form method="POST" action="/irmão/remover">
+          <form method="POST" action="/amigo/remover">
             <input type="hidden" name="irmão_id" value="<%= perfil.id %>">
             <button class="btn btn-secondary" style="width:100%">remover irmão</button>
           </form>
