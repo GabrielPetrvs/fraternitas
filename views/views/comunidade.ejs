@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Fraternitas - <%= com.nome %></title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/irmãos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
+<div id="page">
+<div class="layout2col">
+  <div>
+    <div class="panel">
+      <div class="panel-body" style="text-align:center;">
+        <div style="font-size:48px;margin-bottom:8px;"><%= com.icone %></div>
+        <div style="font-weight:bold;font-size:15px;color:#2a5ba0;"><%= com.nome %></div>
+        <div style="font-size:11px;color:#888;margin:4px 0"><%= total %> membro(s)</div>
+        <% if (com.descricao) { %><div style="font-size:12px;color:#555;margin-top:8px;line-height:1.5"><%= com.descricao %></div><% } %>
+        <div style="margin-top:12px;">
+          <% if (ehMembro) { %>
+          <form method="POST" action="/comunidade/sair"><input type="hidden" name="grupo_id" value="<%= com.id %>"><button class="btn btn-secondary">sair da grupo</button></form>
+          <% } else { %>
+          <form method="POST" action="/comunidade/entrar"><input type="hidden" name="grupo_id" value="<%= com.id %>"><button class="btn btn-primary">entrar na grupo!</button></form>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">membros (<%= total %>)</div>
+      <div class="panel-body">
+        <div class="friend-grid">
+          <% membros.slice(0,9).forEach(function(m) { %>
+          <div class="friend-item">
+            <a href="/perfil/<%= m.id %>">
+              <div class="friend-avatar" style="background:#4a90d4;"><%= m.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
+              <div class="friend-name"><%= m.nome.split(' ')[0] %></div>
+            </a>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <% if (ehMembro) { %>
+    <div class="panel" style="margin-bottom:10px;">
+      <div class="panel-header">novo tópico</div>
+      <div class="panel-body">
+        <form method="POST" action="/topico/criar">
+          <input type="hidden" name="grupo_id" value="<%= com.id %>">
+          <div class="form-group"><label>título</label><input type="text" name="titulo" required></div>
+          <div class="form-group"><label>mensagem</label><textarea name="texto" required></textarea></div>
+          <button type="submit" class="btn btn-primary">criar tópico</button>
+        </form>
+      </div>
+    </div>
+    <% } %>
+    <div class="panel">
+      <div class="panel-header">tópicos (<%= topicos.length %>)</div>
+      <div class="panel-body">
+        <% if (topicos.length === 0) { %><p style="font-size:12px;color:#888;">nenhum tópico ainda. Seja o primeiro!</p>
+        <% } else { topicos.forEach(function(t) { %>
+        <div class="topico-item">
+          <div class="topico-title"><a href="/topico/<%= t.id %>"><%= t.titulo %></a></div>
+          <div class="topico-meta">por <a href="/perfil/<%= t.user_id %>"><%= t.autor %></a> · <%= new Date(t.created_at).toLocaleDateString('pt-BR') %></div>
+        </div>
+        <% }) } %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="footer">© 2025 Fraternitas</div>
+</body></html>

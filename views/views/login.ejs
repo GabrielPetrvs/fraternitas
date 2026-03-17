@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraternitas - entrar</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-box">
+    <div class="login-logo">Fraternitas</div>
+    <p style="text-align:center;font-size:12px;color:#666;margin-bottom:20px;">Cor unum et anima una</p>
+    <% if (typeof erro !== 'undefined' && erro) { %>
+      <div class="alert-error"><%= erro %></div>
+    <% } %>
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label>email</label>
+        <input type="email" name="email" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>senha</label>
+        <input type="password" name="senha" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:8px;">entrar</button>
+    </form>
+    <div style="text-align:center;margin-top:16px;font-size:12px;">
+      não tem conta? <a href="/cadastro">cadastre-se grátis!</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

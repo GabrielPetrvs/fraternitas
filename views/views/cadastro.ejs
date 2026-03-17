@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraternitas - cadastro</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-box" style="width:420px;">
+    <div class="login-logo">Fraternitas</div>
+    <p style="text-align:center;font-size:12px;color:#666;margin-bottom:16px;">Cor unum et anima una</p>
+    <% if (erro) { %><div class="alert-error"><%= erro %></div><% } %>
+    <form method="POST" action="/cadastro">
+      <div class="form-group">
+        <label>nome completo *</label>
+        <input type="text" name="nome" required autofocus>
+      </div>
+      <div class="form-group">
+        <label>email *</label>
+        <input type="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label>senha *</label>
+        <input type="password" name="senha" required minlength="6">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="form-group">
+          <label>cidade</label>
+          <input type="text" name="cidade">
+        </div>
+        <div class="form-group">
+          <label>estado</label>
+          <input type="text" name="estado" maxlength="2" placeholder="ex: RS">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:8px;">criar minha conta!</button>
+    </form>
+    <div style="text-align:center;margin-top:12px;font-size:12px;">
+      já tem conta? <a href="/">entrar</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
