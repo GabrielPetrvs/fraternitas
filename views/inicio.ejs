@@ -79,10 +79,10 @@
     <div class="panel">
       <div class="panel-header">últimos mensagens recebidos</div>
       <div class="panel-body">
-        <% if (mensagensRecentes.length === 0) { %>
+        <% if (scrapsRecentes.length === 0) { %>
           <p style="font-size:12px;color:#888;">nenhum mensagem ainda. <a href="/buscar">adicione irmãos!</a></p>
         <% } else { %>
-          <% mensagensRecentes.forEach(function(s) { %>
+          <% scrapsRecentes.forEach(function(s) { %>
           <div class="mensagem-item">
             <a href="/perfil/<%= s.de_user_id %>" class="mensagem-from"><%= s.de_nome %></a>
             <span class="mensagem-date"><%= new Date(s.created_at).toLocaleDateString('pt-BR') %></span>
