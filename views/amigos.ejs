@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Fraternitas - amigos</title><link rel="stylesheet" href="/css/style.css"></head>
+<head><meta charset="UTF-8"><title>Fraternitas - irmãos</title><link rel="stylesheet" href="/css/style.css"></head>
 <body>
-<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar pessoas..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/sair">sair</a></nav></div></div><% } %>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/irmãos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
 <div id="page">
 <div class="layout2col">
   <div>
@@ -18,13 +18,13 @@
   </div>
   <div>
     <div class="panel">
-      <div class="panel-header">meus amigos (<%= amigos.length %>)</div>
+      <div class="panel-header">meus irmãos (<%= irmãos.length %>)</div>
       <div class="panel-body">
-        <% if (amigos.length === 0) { %>
-          <p style="font-size:12px;color:#888;">você ainda não tem amigos. <a href="/buscar">busque pessoas!</a></p>
+        <% if (irmãos.length === 0) { %>
+          <p style="font-size:12px;color:#888;">você ainda não tem irmãos. <a href="/buscar">busque pessoas!</a></p>
         <% } else { %>
           <div class="friend-grid cols4">
-          <% amigos.forEach(function(a) { %>
+          <% irmãos.forEach(function(a) { %>
             <div class="friend-item">
               <a href="/perfil/<%= a.id %>">
                 <div class="friend-avatar" style="background:#4a90d4;width:56px;height:56px;font-size:20px;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>

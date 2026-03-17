@@ -27,6 +27,7 @@ app.use('/', require('./routes/perfil'));
 app.use('/', require('./routes/scraps'));
 app.use('/', require('./routes/comunidades'));
 app.use('/', require('./routes/amigos'));
+app.use('/', require('./routes/intencoes'));
 
 const PORT = process.env.PORT || 3000;
 

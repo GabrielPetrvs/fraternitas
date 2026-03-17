@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head><meta charset="UTF-8"><title>Fraternitas - buscar</title><link rel="stylesheet" href="/css/style.css"></head>
 <body>
-<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar pessoas..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/sair">sair</a></nav></div></div><% } %>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/irmãos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
 <div id="page">
 <div style="max-width:600px;">
   <div class="panel" style="margin-bottom:10px;">
@@ -29,9 +29,9 @@
           </div>
           <div style="display:flex;gap:4px;">
             <a href="/perfil/<%= u.id %>" class="btn btn-secondary">ver perfil</a>
-            <form method="POST" action="/amigo/adicionar" style="display:inline">
-              <input type="hidden" name="amigo_id" value="<%= u.id %>">
-              <button class="btn btn-primary" type="submit">+ amigo</button>
+            <form method="POST" action="/irmão/adicionar" style="display:inline">
+              <input type="hidden" name="irmão_id" value="<%= u.id %>">
+              <button class="btn btn-primary" type="submit">+ irmão</button>
             </form>
           </div>
         </div>

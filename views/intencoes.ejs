@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Fraternitas - Intenções de Oração</title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
+<div id="page">
+<div class="layout2col">
+  <div>
+    <div class="panel">
+      <div class="panel-header">✝ nova intenção</div>
+      <div class="panel-body">
+        <form method="POST" action="/intencoes/criar">
+          <div class="form-group">
+            <label>partilhe sua intenção de oração</label>
+            <textarea name="texto" required style="height:90px;" placeholder="Ex: Peço orações pela saúde da minha mãe..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">✝ pedir orações</button>
+        </form>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-body" style="font-size:12px;color:#8b6914;font-style:italic;line-height:1.7;text-align:center;">
+        "Orai uns pelos outros, para serdes curados."<br>
+        <span style="font-size:11px;color:#aaa;">— Tiago 5:16</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <div class="panel-header">✝ mural de intenções de oração (<%= intencoes.length %>)</div>
+      <div class="panel-body">
+        <% if (intencoes.length === 0) { %>
+          <p style="font-size:12px;color:#888;text-align:center;padding:16px 0;">nenhuma intenção partilhada ainda.<br>Seja o primeiro a pedir orações! 🙏</p>
+        <% } else { intencoes.forEach(function(i) { %>
+        <div class="prayer-item">
+          <div class="prayer-from">
+            <a href="/perfil/<%= i.user_id %>"><%= i.autor %></a>
+            <span style="font-size:11px;color:#aaa;margin-left:8px;"><%= new Date(i.created_at).toLocaleDateString('pt-BR') %></span>
+          </div>
+          <div class="prayer-text"><%= i.texto %></div>
+          <div class="prayer-amens">
+            <form method="POST" action="/intencoes/amen" style="display:inline;">
+              <input type="hidden" name="intencao_id" value="<%= i.id %>">
+              <button type="submit" style="background:none;border:none;cursor:pointer;color:<%= i.eu_amei > 0 ? '#c9a84c' : '#aaa' %>;font-size:12px;font-family:Arial,sans-serif;padding:0;">
+                🙏 Amém (<%= i.total_amens %>)
+              </button>
+            </form>
+          </div>
+        </div>
+        <% }) } %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="footer">© 2025 Fraternitas — Cor unum et anima una</div>
+</body></html>

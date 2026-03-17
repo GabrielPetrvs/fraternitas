@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Fraternitas - comunidades</title><link rel="stylesheet" href="/css/style.css"></head>
+<head><meta charset="UTF-8"><title>Fraternitas - grupos</title><link rel="stylesheet" href="/css/style.css"></head>
 <body>
-<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar pessoas..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/sair">sair</a></nav></div></div><% } %>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/irmãos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
 <div id="page">
 <div class="layout2col">
   <div>
     <div class="panel">
-      <div class="panel-header">criar comunidade</div>
+      <div class="panel-header">criar grupo</div>
       <div class="panel-body">
         <form method="POST" action="/comunidade/criar">
           <div class="form-group"><label>nome *</label><input type="text" name="nome" required></div>
@@ -28,9 +28,9 @@
   </div>
   <div>
     <div class="panel" style="margin-bottom:10px;">
-      <div class="panel-header">minhas comunidades (<%= minhas.length %>)</div>
+      <div class="panel-header">minhas grupos (<%= minhas.length %>)</div>
       <div class="panel-body">
-        <% if (minhas.length === 0) { %><p style="font-size:12px;color:#888;">você não participa de nenhuma comunidade ainda.</p>
+        <% if (minhas.length === 0) { %><p style="font-size:12px;color:#888;">você não participa de nenhuma grupo ainda.</p>
         <% } else { minhas.forEach(function(c) { %>
         <div class="comm-item">
           <div class="comm-icon"><%= c.icone %></div>
@@ -40,9 +40,9 @@
       </div>
     </div>
     <div class="panel">
-      <div class="panel-header">todas as comunidades</div>
+      <div class="panel-header">todas as grupos</div>
       <div class="panel-body">
-        <% if (todas.length === 0) { %><p style="font-size:12px;color:#888;">nenhuma comunidade criada ainda.</p>
+        <% if (todas.length === 0) { %><p style="font-size:12px;color:#888;">nenhuma grupo criada ainda.</p>
         <% } else { todas.forEach(function(c) { %>
         <div class="comm-item">
           <div class="comm-icon"><%= c.icone %></div>

@@ -25,6 +25,8 @@ async function initDb() {
     CREATE TABLE IF NOT EXISTS comunidades (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, descricao TEXT DEFAULT '', categoria TEXT DEFAULT 'geral', dono_id INTEGER, icone TEXT DEFAULT '💬', created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
     CREATE TABLE IF NOT EXISTS membros_comunidade (id INTEGER PRIMARY KEY AUTOINCREMENT, comunidade_id INTEGER, user_id INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, UNIQUE(comunidade_id, user_id));
     CREATE TABLE IF NOT EXISTS topicos (id INTEGER PRIMARY KEY AUTOINCREMENT, comunidade_id INTEGER, user_id INTEGER, titulo TEXT NOT NULL, texto TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
+    CREATE TABLE IF NOT EXISTS intencoes (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, texto TEXT NOT NULL, amens INTEGER DEFAULT 0, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
+    CREATE TABLE IF NOT EXISTS intencoes_amens (id INTEGER PRIMARY KEY AUTOINCREMENT, intencao_id INTEGER, user_id INTEGER, UNIQUE(intencao_id, user_id));
     CREATE TABLE IF NOT EXISTS respostas_topico (id INTEGER PRIMARY KEY AUTOINCREMENT, topico_id INTEGER, user_id INTEGER, texto TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP);
   `);
   saveDb();
@@ -33,3 +35,5 @@ async function initDb() {
 
 function getDb() { return _db; }
 module.exports = { initDb, getDb, saveDb };
+
+// Prayer intentions table - added to initDb
