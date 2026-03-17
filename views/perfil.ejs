@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraternitas - <%= perfil.nome %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<% if (usuario) { %>
+<div id="header">
+  <div id="header-inner">
+    <a href="/inicio" id="logo">Fraternitas</a>
+    <form action="/buscar" method="GET" id="search-form">
+      <input type="text" name="q" placeholder="buscar pessoas..." autocomplete="off">
+      <button type="submit">buscar</button>
+    </form>
+    <nav>
+      <a href="/inicio">início</a>
+      <a href="/perfil">meu perfil</a>
+      <a href="/amigos">amigos</a>
+      <a href="/comunidades">comunidades</a>
+      <a href="/sair">sair</a>
+    </nav>
+  </div>
+</div>
+<% } %>
+<div id="page">
+<div class="layout3col">
+  <div>
+    <div class="panel">
+      <div class="avatar-box">
+        <div class="avatar-circle" style="width:100px;height:100px;font-size:36px;">
+          <%= perfil.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %>
+        </div>
+        <div class="user-name-big"><%= perfil.nome %></div>
+        <div class="user-location"><%= perfil.cidade ? perfil.cidade + (perfil.estado ? ', ' + perfil.estado : '') : 'Brasil' %></div>
+        <% if (mediaKarma && depoimentos.length > 0) { %>
+        <div class="karma-section">
+          <% var conf = Math.round(mediaKarma.conf || 3); var cria = Math.round(mediaKarma.cria || 3); var sexu = Math.round(mediaKarma.sexu || 3); %>
+          <div class="karma-row"><span>confiabilidade</span><span class="stars"><%= '★'.repeat(conf) + '☆'.repeat(5-conf) %></span></div>
+          <div class="karma-row"><span>criatividade</span><span class="stars"><%= '★'.repeat(cria) + '☆'.repeat(5-cria) %></span></div>
+          <div class="karma-row"><span>sexualidade</span><span class="stars"><%= '★'.repeat(sexu) + '☆'.repeat(5-sexu) %></span></div>
+        </div>
+        <% } %>
+      </div>
+      <ul class="stat-list">
+        <li><span>amigos</span><span><%= amigos.length %></span></li>
+        <li><span>comunidades</span><span><%= comunidades.length %></span></li>
+        <li><span>depoimentos</span><span><%= depoimentos.length %></span></li>
+        <li><span>scraps</span><span><%= scraps.length %></span></li>
+      </ul>
+    </div>
+    <% if (!ehMeuPerfil) { %>
+    <div class="panel">
+      <div class="panel-body" style="display:flex;flex-direction:column;gap:6px;">
+        <% if (!amizade) { %>
+          <form method="POST" action="/amigo/adicionar">
+            <input type="hidden" name="amigo_id" value="<%= perfil.id %>">
+            <button class="btn btn-primary" style="width:100%">+ adicionar amigo</button>
+          </form>
+        <% } else if (amizade.status === 'pendente') { %>
+          <span style="font-size:12px;color:#888;">solicitação enviada</span>
+        <% } else { %>
+          <form method="POST" action="/amigo/remover">
+            <input type="hidden" name="amigo_id" value="<%= perfil.id %>">
+            <button class="btn btn-secondary" style="width:100%">remover amigo</button>
+          </form>
+        <% } %>
+        <a href="/depoimento/<%= perfil.id %>" class="btn btn-secondary" style="text-align:center">escrever depoimento</a>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="panel">
+      <div class="panel-body">
+        <a href="#" onclick="toggleEdit();return false;" class="btn btn-secondary" style="width:100%;display:block;text-align:center;">editar perfil</a>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div>
+    <div class="panel" style="margin-bottom:10px;">
+      <div class="panel-header">sobre <%= ehMeuPerfil ? 'mim' : perfil.nome %></div>
+      <div class="panel-body" style="font-size:12px;line-height:1.6;">
+        <%= perfil.sobre || '' %>
+        <% if (!perfil.sobre) { %><span style="color:#888;">nenhuma informação adicionada.</span><% } %>
+        <% if (perfil.interesses) { %><div style="margin-top:8px;"><strong>interesses:</strong> <%= perfil.interesses %></div><% } %>
+      </div>
+    </div>
+
+    <% if (ehMeuPerfil) { %>
+    <div class="panel" id="edit-panel" style="display:none;margin-bottom:10px;">
+      <div class="panel-header">editar perfil</div>
+      <div class="panel-body">
+        <form method="POST" action="/perfil/editar">
+          <div class="form-group"><label>nome</label><input type="text" name="nome" value="<%= perfil.nome %>" required></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="form-group"><label>cidade</label><input type="text" name="cidade" value="<%= perfil.cidade || '' %>"></div>
+            <div class="form-group"><label>estado</label><input type="text" name="estado" value="<%= perfil.estado || '' %>" maxlength="2"></div>
+          </div>
+          <div class="form-group"><label>sobre mim</label><textarea name="sobre"><%= perfil.sobre || '' %></textarea></div>
+          <div class="form-group"><label>interesses</label><input type="text" name="interesses" value="<%= perfil.interesses || '' %>" placeholder="ex: música, filmes, esportes"></div>
+          <button type="submit" class="btn btn-primary">salvar</button>
+          <button type="button" onclick="toggleEdit()" class="btn btn-secondary">cancelar</button>
+        </form>
+      </div>
+    </div>
+    <% } %>
+
+    <div class="panel">
+      <div class="tab-bar">
+        <a href="#" onclick="showTab('scraps',this);return false;" class="tab active" id="tabl-scraps">scraps (<%= scraps.length %>)</a>
+        <a href="#" onclick="showTab('dep',this);return false;" class="tab" id="tabl-dep">depoimentos (<%= depoimentos.length %>)</a>
+        <a href="#" onclick="showTab('amigos',this);return false;" class="tab" id="tabl-amigos">amigos (<%= amigos.length %>)</a>
+      </div>
+      <div id="sec-scraps" class="panel-body">
+        <form method="POST" action="/scrap/enviar" style="margin-bottom:12px;">
+          <input type="hidden" name="para_user_id" value="<%= perfil.id %>">
+          <textarea class="scrap-input" name="texto" placeholder="escreva um scrap..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+            <button type="submit" class="btn btn-primary">enviar scrap</button>
+          </div>
+        </form>
+        <% if (scraps.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum scrap ainda.</p>
+        <% } else { %>
+          <% scraps.forEach(function(s) { %>
+          <div class="scrap-item">
+            <a href="/perfil/<%= s.de_user_id %>" class="scrap-from"><%= s.de_nome %></a>
+            <span class="scrap-date"><%= new Date(s.created_at).toLocaleDateString('pt-BR') %></span>
+            <div class="scrap-text"><%= s.texto %></div>
+          </div>
+          <% }) %>
+        <% } %>
+      </div>
+      <div id="sec-dep" class="panel-body" style="display:none">
+        <% if (depoimentos.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum depoimento ainda.</p>
+        <% } else { %>
+          <% depoimentos.forEach(function(d) { %>
+          <div class="dep-item">
+            <div class="dep-from">
+              <a href="/perfil/<%= d.de_user_id %>"><%= d.de_nome %></a>
+              <span class="stars" style="margin-left:6px;"><%= '★'.repeat(d.confiabilidade) + '☆'.repeat(5-d.confiabilidade) %></span>
+            </div>
+            <div class="dep-text">"<%= d.texto %>"</div>
+          </div>
+          <% }) %>
+        <% } %>
+      </div>
+      <div id="sec-amigos" class="panel-body" style="display:none">
+        <% if (amigos.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum amigo ainda.</p>
+        <% } else { %>
+          <div class="friend-grid cols4">
+          <% amigos.forEach(function(a) { %>
+            <div class="friend-item">
+              <a href="/perfil/<%= a.id %>">
+                <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
+                <div class="friend-name"><%= a.nome.split(' ')[0] %></div>
+              </a>
+            </div>
+          <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="panel">
+      <div class="panel-header">comunidades</div>
+      <div class="panel-body">
+        <% if (comunidades.length === 0) { %>
+          <p style="font-size:11px;color:#888;">nenhuma comunidade.</p>
+        <% } else { %>
+          <% comunidades.slice(0,5).forEach(function(c) { %>
+          <div class="comm-item">
+            <div class="comm-icon"><%= c.icone %></div>
+            <div class="comm-name"><a href="/comunidade/<%= c.id %>"><%= c.nome %></a></div>
+          </div>
+          <% }) %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="footer">© 2025 Fraternitas (feito com ❤️ nostalgia)</div>
+<script>
+function showTab(id, el) {
+  ['scraps','dep','amigos'].forEach(function(t) {
+    document.getElementById('sec-'+t).style.display = t===id ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  if(el) el.classList.add('active');
+}
+function toggleEdit() {
+  var p = document.getElementById('edit-panel');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+</body>
+</html>

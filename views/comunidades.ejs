@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Fraternitas - comunidades</title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar pessoas..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/sair">sair</a></nav></div></div><% } %>
+<div id="page">
+<div class="layout2col">
+  <div>
+    <div class="panel">
+      <div class="panel-header">criar comunidade</div>
+      <div class="panel-body">
+        <form method="POST" action="/comunidade/criar">
+          <div class="form-group"><label>nome *</label><input type="text" name="nome" required></div>
+          <div class="form-group"><label>descrição</label><textarea name="descricao" style="height:60px"></textarea></div>
+          <div class="form-group"><label>ícone</label>
+            <select name="icone">
+              <option value="💬">💬 geral</option><option value="🎵">🎵 música</option>
+              <option value="⚽">⚽ esportes</option><option value="🎮">🎮 games</option>
+              <option value="📚">📚 livros</option><option value="🎬">🎬 filmes</option>
+              <option value="😂">😂 humor</option><option value="🌍">🌍 viagens</option>
+              <option value="❤️">❤️ amor</option><option value="🎉">🎉 festas</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">criar!</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="panel" style="margin-bottom:10px;">
+      <div class="panel-header">minhas comunidades (<%= minhas.length %>)</div>
+      <div class="panel-body">
+        <% if (minhas.length === 0) { %><p style="font-size:12px;color:#888;">você não participa de nenhuma comunidade ainda.</p>
+        <% } else { minhas.forEach(function(c) { %>
+        <div class="comm-item">
+          <div class="comm-icon"><%= c.icone %></div>
+          <div><div class="comm-name"><a href="/comunidade/<%= c.id %>"><%= c.nome %></a></div><div class="comm-members"><%= c.total %> membro(s)</div></div>
+        </div>
+        <% }) } %>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">todas as comunidades</div>
+      <div class="panel-body">
+        <% if (todas.length === 0) { %><p style="font-size:12px;color:#888;">nenhuma comunidade criada ainda.</p>
+        <% } else { todas.forEach(function(c) { %>
+        <div class="comm-item">
+          <div class="comm-icon"><%= c.icone %></div>
+          <div><div class="comm-name"><a href="/comunidade/<%= c.id %>"><%= c.nome %></a></div><div class="comm-members"><%= c.total %> membro(s)</div></div>
+        </div>
+        <% }) } %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="footer">© 2025 Fraternitas</div>
+</body></html>

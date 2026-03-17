@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fraternitas - <%= typeof titulo !== 'undefined' ? titulo : 'conecte-se' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<% if (usuario) { %>
+<div id="header">
+  <div id="header-inner">
+    <a href="/inicio" id="logo">Fraternitas</a>
+    <form action="/buscar" method="GET" id="search-form">
+      <input type="text" name="q" placeholder="buscar pessoas..." autocomplete="off">
+      <button type="submit">buscar</button>
+    </form>
+    <nav>
+      <a href="/inicio">início</a>
+      <a href="/perfil">meu perfil</a>
+      <a href="/amigos">amigos</a>
+      <a href="/comunidades">comunidades</a>
+      <a href="/sair">sair</a>
+    </nav>
+  </div>
+</div>
+<% } %>
+
+<div id="page">
+  <%- body %>
+</div>
+
+<div id="footer">
+  © 2025 Fraternitas (feito com ❤️ nostalgia) ·
+  <a href="/inicio">início</a> ·
+  <a href="/perfil">perfil</a> ·
+  <a href="/comunidades">comunidades</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><meta charset="UTF-8"><title>Fraternitas - tópico</title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar pessoas..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/sair">sair</a></nav></div></div><% } %>
+<div id="page">
+<div style="max-width:680px;">
+  <div class="panel" style="margin-bottom:10px;">
+    <div class="panel-header"><%= topico.titulo %></div>
+    <div class="panel-body">
+      <div style="font-size:12px;color:#888;margin-bottom:8px;">por <a href="/perfil/<%= topico.user_id %>"><%= topico.autor %></a> · <%= new Date(topico.created_at).toLocaleDateString('pt-BR') %></div>
+      <div style="font-size:13px;line-height:1.7;"><%= topico.texto %></div>
+    </div>
+  </div>
+  <div class="panel" style="margin-bottom:10px;">
+    <div class="panel-header">respostas (<%= respostas.length %>)</div>
+    <div class="panel-body">
+      <% if (respostas.length === 0) { %><p style="font-size:12px;color:#888;">nenhuma resposta ainda.</p>
+      <% } else { respostas.forEach(function(r) { %>
+      <div class="scrap-item">
+        <a href="/perfil/<%= r.user_id %>" class="scrap-from"><%= r.autor %></a>
+        <span class="scrap-date"><%= new Date(r.created_at).toLocaleDateString('pt-BR') %></span>
+        <div class="scrap-text"><%= r.texto %></div>
+      </div>
+      <% }) } %>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-header">responder</div>
+    <div class="panel-body">
+      <form method="POST" action="/topico/responder">
+        <input type="hidden" name="topico_id" value="<%= topico.id %>">
+        <textarea class="scrap-input" name="texto" placeholder="sua resposta..." required style="height:80px"></textarea>
+        <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+          <button type="submit" class="btn btn-primary">responder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+<div id="footer">© 2025 Fraternitas</div>
+</body></html>
