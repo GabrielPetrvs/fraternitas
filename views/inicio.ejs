@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Fraternitas - início</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
 <% if (usuario) { %>
@@ -125,7 +126,11 @@
           <% amigos.slice(0,6).forEach(function(a) { %>
             <div class="friend-item">
               <a href="/perfil/<%= a.id %>">
-                <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
+                <% if (a.foto) { %>
+              <img src="<%= a.foto %>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;">
+            <% } else { %>
+              <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
+            <% } %>
                 <div class="friend-name"><%= a.nome.split(' ')[0] %></div>
               </a>
             </div>
@@ -155,5 +160,11 @@
 </div>
 </div>
 <div id="footer">© 2025 Fraternitas (feito com ❤️ nostalgia)</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  window.FRATERNITAS_USER_ID = '<%= usuario ? usuario.id : "" %>';
+  window.FRATERNITAS_USER_NOME = '<%= usuario ? usuario.nome : "" %>';
+</script>
+<script src="/chat.js"></script>
 </body>
 </html>
