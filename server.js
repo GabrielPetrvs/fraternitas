@@ -37,6 +37,7 @@ app.use('/', require('./routes/scraps'));
 app.use('/', require('./routes/comunidades'));
 app.use('/', require('./routes/amigos'));
 app.use('/', require('./routes/intencoes'));
+app.use('/', require('./routes/chat'));
 
 const onlineUsers = {};
 
