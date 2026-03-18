@@ -38,6 +38,8 @@ async function initDb() {
     CREATE TABLE IF NOT EXISTS intencoes_amens (id INTEGER PRIMARY KEY AUTOINCREMENT, intencao_id INTEGER, user_id INTEGER, UNIQUE(intencao_id, user_id));
   `);
 
+  _db.run('CREATE TABLE IF NOT EXISTS chat_mensagens (id INTEGER PRIMARY KEY AUTOINCREMENT, de_user_id INTEGER, para_user_id INTEGER, room_id TEXT, texto TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)');
+
   saveDb();
   return _db;
 }
@@ -47,3 +49,6 @@ module.exports = { initDb, getDb, saveDb };
 
 // Add visto column if not exists (for existing databases)
 try { getDb().run("ALTER TABLE amizades ADD COLUMN visto INTEGER DEFAULT 0"); } catch(e) {}
+try { getDb().run("ALTER TABLE users ADD COLUMN foto TEXT DEFAULT ''"); } catch(e) {}
+try { getDb().run("ALTER TABLE comunidades ADD COLUMN foto TEXT DEFAULT ''"); } catch(e) {}
+
