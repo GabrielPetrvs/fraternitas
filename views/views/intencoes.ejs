@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Fraternitas - Intenções de Oração</title><link rel="stylesheet" href="/css/style.css"></head>
+<head><meta charset="UTF-8"><title>Fraternitas - Intenções de Oração</title><link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/favicon.png"></head>
 <body>
-<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar amigos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
 <div id="page">
 <div class="layout2col">
   <div>
@@ -54,4 +55,10 @@
 </div>
 </div>
 <div id="footer">© 2025 Fraternitas — Cor unum et anima una</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  window.FRATERNITAS_USER_ID = '<%= usuario ? usuario.id : "" %>';
+  window.FRATERNITAS_USER_NOME = '<%= usuario ? usuario.nome : "" %>';
+</script>
+<script src="/chat.js"></script>
 </body></html>

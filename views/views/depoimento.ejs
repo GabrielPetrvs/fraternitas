@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head><meta charset="UTF-8"><title>Fraternitas - testemunho</title><link rel="stylesheet" href="/css/style.css"></head>
+<head><meta charset="UTF-8"><title>Fraternitas - depoimento</title><link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/favicon.png"></head>
 <body>
-<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar irmãos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/irmãos">irmãos</a><a href="/comunidades">grupos</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
+<% if (usuario) { %><div id="header"><div id="header-inner"><a href="/inicio" id="logo">Fraternitas</a><form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar amigos..."><button type="submit">buscar</button></form><nav><a href="/inicio">início</a><a href="/perfil">meu perfil</a><a href="/amigos">amigos</a><a href="/comunidades">comunidades</a><a href="/intencoes">✝ orações</a><a href="/sair">sair</a></nav></div></div><% } %>
 <div id="page">
 <div style="max-width:520px;">
   <div class="panel">
-    <div class="panel-header">escrever testemunho para <%= para.nome %></div>
+    <div class="panel-header">escrever depoimento para <%= para.nome %></div>
     <div class="panel-body">
       <form method="POST" action="/depoimento/enviar">
         <input type="hidden" name="para_user_id" value="<%= para.id %>">
         <div class="form-group">
-          <label>testemunho</label>
+          <label>depoimento</label>
           <textarea name="texto" required style="height:100px" placeholder="escreva algo legal sobre <%= para.nome %>..."><%= existente ? existente.texto : '' %></textarea>
         </div>
-        <div class="form-group"><label>caridade</label>
-          <select name="caridade">
-            <% for(var i=1;i<=5;i++) { %><option value="<%= i %>" <%= existente && existente.caridade==i ? 'selected' : '' %>><%= '★'.repeat(i) + '☆'.repeat(5-i) %></option><% } %>
+        <div class="form-group"><label>confiabilidade</label>
+          <select name="confiabilidade">
+            <% for(var i=1;i<=5;i++) { %><option value="<%= i %>" <%= existente && existente.confiabilidade==i ? 'selected' : '' %>><%= '★'.repeat(i) + '☆'.repeat(5-i) %></option><% } %>
           </select>
         </div>
-        <div class="form-group"><label>esperança</label>
-          <select name="esperança">
-            <% for(var i=1;i<=5;i++) { %><option value="<%= i %>" <%= existente && existente.esperança==i ? 'selected' : '' %>><%= '★'.repeat(i) + '☆'.repeat(5-i) %></option><% } %>
+        <div class="form-group"><label>criatividade</label>
+          <select name="criatividade">
+            <% for(var i=1;i<=5;i++) { %><option value="<%= i %>" <%= existente && existente.criatividade==i ? 'selected' : '' %>><%= '★'.repeat(i) + '☆'.repeat(5-i) %></option><% } %>
           </select>
         </div>
-        <div class="form-group"><label>fé</label>
-          <select name="fé">
-            <% for(var i=1;i<=5;i++) { %><option value="<%= i %>" <%= existente && existente.fé==i ? 'selected' : '' %>><%= '★'.repeat(i) + '☆'.repeat(5-i) %></option><% } %>
+        <div class="form-group"><label>sexualidade</label>
+          <select name="sexualidade">
+            <% for(var i=1;i<=5;i++) { %><option value="<%= i %>" <%= existente && existente.sexualidade==i ? 'selected' : '' %>><%= '★'.repeat(i) + '☆'.repeat(5-i) %></option><% } %>
           </select>
         </div>
-        <button type="submit" class="btn btn-primary"><%= existente ? 'atualizar' : 'enviar' %> testemunho</button>
+        <button type="submit" class="btn btn-primary"><%= existente ? 'atualizar' : 'enviar' %> depoimento</button>
         <a href="/perfil/<%= para.id %>" class="btn btn-secondary" style="margin-left:6px;">cancelar</a>
       </form>
     </div>
@@ -37,4 +38,10 @@
 </div>
 </div>
 <div id="footer">© 2025 Fraternitas</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  window.FRATERNITAS_USER_ID = '<%= usuario ? usuario.id : "" %>';
+  window.FRATERNITAS_USER_NOME = '<%= usuario ? usuario.nome : "" %>';
+</script>
+<script src="/chat.js"></script>
 </body></html>

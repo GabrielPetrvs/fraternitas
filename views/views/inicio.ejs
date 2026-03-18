@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Fraternitas - início</title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
 <% if (usuario) { %>
@@ -11,14 +12,14 @@
   <div id="header-inner">
     <a href="/inicio" id="logo">Fraternitas</a>
     <form action="/buscar" method="GET" id="search-form">
-      <input type="text" name="q" placeholder="buscar irmãos..." autocomplete="off">
+      <input type="text" name="q" placeholder="buscar amigos..." autocomplete="off">
       <button type="submit">buscar</button>
     </form>
     <nav>
       <a href="/inicio">início</a>
       <a href="/perfil">meu perfil</a>
-      <a href="/irmãos">irmãos</a>
-      <a href="/comunidades">grupos</a>
+      <a href="/amigos">amigos</a>
+      <a href="/comunidades">comunidades</a>
       <a href="/sair">sair</a>
     </nav>
   </div>
@@ -34,8 +35,8 @@
         <div class="user-location"><%= usuario.cidade ? usuario.cidade + (usuario.estado ? ', ' + usuario.estado : '') : 'Brasil' %></div>
       </div>
       <ul class="stat-list">
-        <li><span>irmãos</span><a href="/irmãos">ver todos</a></li>
-        <li><span>grupos</span><a href="/comunidades">ver todas</a></li>
+        <li><span>amigos</span><a href="/amigos">ver todos</a></li>
+        <li><span>comunidades</span><a href="/comunidades">ver todas</a></li>
         <li><span>perfil</span><a href="/perfil">editar</a></li>
       </ul>
     </div>
@@ -44,28 +45,45 @@
       <ul class="side-menu">
         <li><a href="/inicio">🏠 início</a></li>
         <li><a href="/perfil">👤 meu perfil</a></li>
-        <li><a href="/irmãos">👥 irmãos</a></li>
-        <li><a href="/comunidades">💬 grupos</a></li>
-        <li><a href="/buscar">🔍 buscar irmãos</a></li>
+        <li><a href="/amigos">👥 amigos</a></li>
+        <li><a href="/comunidades">💬 comunidades</a></li>
+        <li><a href="/buscar">🔍 buscar amigos</a></li>
         <li><a href="/intencoes">✝ intenções de oração</a></li>
       </ul>
     </div>
   </div>
 
   <div>
+        <% if (typeof aceitaram !== 'undefined' && aceitaram.length > 0) { %>
+    <div class="panel">
+      <div class="panel-header" style="background:linear-gradient(to bottom,#c8a830,#a07820);color:#fff;">🎉 novas amizades aceitas!</div>
+      <div class="panel-body">
+        <% aceitaram.forEach(function(a) { %>
+        <div class="solicitacao-item">
+          <span><a href="/perfil/<%= a.id %>"><%= a.nome %></a> aceitou seu pedido de amizade! 🎉</span>
+        </div>
+        <% }) %>
+        <div style="margin-top:8px;">
+          <form method="POST" action="/notificacao/vista">
+            <button type="submit" class="btn btn-secondary" style="font-size:11px;">marcar como visto</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <% } %>
     <% if (solicitacoes.length > 0) { %>
     <div class="panel">
       <div class="panel-header">⚠️ solicitações de amizade (<%= solicitacoes.length %>)</div>
       <div class="panel-body">
         <% solicitacoes.forEach(function(s) { %>
         <div class="solicitacao-item">
-          <span><a href="/perfil/<%= s.uid %>"><%= s.nome %></a> quer ser seu irmão</span>
+          <span><a href="/perfil/<%= s.uid %>"><%= s.nome %></a> quer ser seu amigo</span>
           <div style="display:flex;gap:4px;">
-            <form method="POST" action="/irmão/aceitar" style="display:inline">
+            <form method="POST" action="/amigo/aceitar" style="display:inline">
               <input type="hidden" name="amizade_id" value="<%= s.id %>">
               <button class="btn btn-primary" type="submit">aceitar</button>
             </form>
-            <form method="POST" action="/irmão/recusar" style="display:inline">
+            <form method="POST" action="/amigo/recusar" style="display:inline">
               <input type="hidden" name="amizade_id" value="<%= s.id %>">
               <button class="btn btn-secondary" type="submit">recusar</button>
             </form>
@@ -77,21 +95,21 @@
     <% } %>
 
     <div class="panel">
-      <div class="panel-header">últimos mensagens recebidos</div>
+      <div class="panel-header">últimos scraps recebidos</div>
       <div class="panel-body">
-        <% if (mensagensRecentes.length === 0) { %>
-          <p style="font-size:12px;color:#888;">nenhum mensagem ainda. <a href="/buscar">adicione irmãos!</a></p>
+        <% if (scrapsRecentes.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum scrap ainda. <a href="/buscar">adicione amigos!</a></p>
         <% } else { %>
-          <% mensagensRecentes.forEach(function(s) { %>
-          <div class="mensagem-item">
-            <a href="/perfil/<%= s.de_user_id %>" class="mensagem-from"><%= s.de_nome %></a>
-            <span class="mensagem-date"><%= new Date(s.created_at).toLocaleDateString('pt-BR') %></span>
-            <div class="mensagem-text"><%= s.texto %></div>
+          <% scrapsRecentes.forEach(function(s) { %>
+          <div class="scrap-item">
+            <a href="/perfil/<%= s.de_user_id %>" class="scrap-from"><%= s.de_nome %></a>
+            <span class="scrap-date"><%= new Date(s.created_at).toLocaleDateString('pt-BR') %></span>
+            <div class="scrap-text"><%= s.texto %></div>
           </div>
           <% }) %>
         <% } %>
         <div style="margin-top:8px;">
-          <a href="/perfil" class="btn btn-secondary">ver todos os mensagens</a>
+          <a href="/perfil" class="btn btn-secondary">ver todos os scraps</a>
         </div>
       </div>
     </div>
@@ -99,32 +117,36 @@
 
   <div>
     <div class="panel">
-      <div class="panel-header">meus irmãos</div>
+      <div class="panel-header">meus amigos</div>
       <div class="panel-body">
-        <% if (irmãos.length === 0) { %>
-          <p style="font-size:11px;color:#888;">nenhum irmão ainda!</p>
+        <% if (amigos.length === 0) { %>
+          <p style="font-size:11px;color:#888;">nenhum amigo ainda!</p>
         <% } else { %>
           <div class="friend-grid">
-          <% irmãos.slice(0,6).forEach(function(a) { %>
+          <% amigos.slice(0,6).forEach(function(a) { %>
             <div class="friend-item">
               <a href="/perfil/<%= a.id %>">
-                <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
+                <% if (a.foto) { %>
+              <img src="<%= a.foto %>" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;">
+            <% } else { %>
+              <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
+            <% } %>
                 <div class="friend-name"><%= a.nome.split(' ')[0] %></div>
               </a>
             </div>
           <% }) %>
           </div>
         <% } %>
-        <div style="margin-top:8px;"><a href="/irmãos" style="font-size:11px;">ver todos</a></div>
+        <div style="margin-top:8px;"><a href="/amigos" style="font-size:11px;">ver todos</a></div>
       </div>
     </div>
     <div class="panel">
-      <div class="panel-header">minhas grupos</div>
+      <div class="panel-header">minhas comunidades</div>
       <div class="panel-body">
-        <% if (grupos.length === 0) { %>
+        <% if (comunidades.length === 0) { %>
           <p style="font-size:11px;color:#888;">nenhuma ainda!</p>
         <% } else { %>
-          <% grupos.forEach(function(c) { %>
+          <% comunidades.forEach(function(c) { %>
           <div class="comm-item">
             <div class="comm-icon"><%= c.icone %></div>
             <div><div class="comm-name"><a href="/comunidade/<%= c.id %>"><%= c.nome %></a></div></div>
@@ -138,5 +160,11 @@
 </div>
 </div>
 <div id="footer">© 2025 Fraternitas (feito com ❤️ nostalgia)</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  window.FRATERNITAS_USER_ID = '<%= usuario ? usuario.id : "" %>';
+  window.FRATERNITAS_USER_NOME = '<%= usuario ? usuario.nome : "" %>';
+</script>
+<script src="/chat.js"></script>
 </body>
 </html>

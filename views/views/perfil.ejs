@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Fraternitas - <%= perfil.nome %></title>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
 </head>
 <body>
 <% if (usuario) { %>
@@ -11,14 +12,14 @@
   <div id="header-inner">
     <a href="/inicio" id="logo">Fraternitas</a>
     <form action="/buscar" method="GET" id="search-form">
-      <input type="text" name="q" placeholder="buscar irmãos..." autocomplete="off">
+      <input type="text" name="q" placeholder="buscar amigos..." autocomplete="off">
       <button type="submit">buscar</button>
     </form>
     <nav>
       <a href="/inicio">início</a>
       <a href="/perfil">meu perfil</a>
-      <a href="/irmãos">irmãos</a>
-      <a href="/comunidades">grupos</a>
+      <a href="/amigos">amigos</a>
+      <a href="/comunidades">comunidades</a>
       <a href="/sair">sair</a>
     </nav>
   </div>
@@ -29,44 +30,57 @@
   <div>
     <div class="panel">
       <div class="avatar-box">
-        <div class="avatar-circle" style="width:100px;height:100px;font-size:36px;">
-          <%= perfil.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %>
-        </div>
+        <% if (perfil.foto) { %>
+          <img src="<%= perfil.foto %>" alt="foto de <%= perfil.nome %>" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #c9a84c;">
+        <% } else { %>
+          <div class="avatar-circle" style="width:100px;height:100px;font-size:36px;">
+            <%= perfil.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %>
+          </div>
+        <% } %>
+        <% if (ehMeuPerfil) { %>
+        <form method="POST" action="/perfil/foto" enctype="multipart/form-data" style="margin-top:6px;">
+          <label style="cursor:pointer;font-size:11px;color:#8b6914;text-decoration:underline;">
+            📷 alterar foto
+            <input type="file" name="foto" accept="image/*" style="display:none" onchange="this.form.submit()">
+          </label>
+        </form>
+        <% } %>
         <div class="user-name-big"><%= perfil.nome %></div>
         <div class="user-location"><%= perfil.cidade ? perfil.cidade + (perfil.estado ? ', ' + perfil.estado : '') : 'Brasil' %></div>
-        <% if (mediaKarma && testemunhos.length > 0) { %>
+        <% if (mediaKarma && depoimentos.length > 0) { %>
         <div class="karma-section">
           <% var conf = Math.round(mediaKarma.conf || 3); var cria = Math.round(mediaKarma.cria || 3); var sexu = Math.round(mediaKarma.sexu || 3); %>
-          <div class="karma-row"><span>caridade</span><span class="stars"><%= '★'.repeat(conf) + '☆'.repeat(5-conf) %></span></div>
-          <div class="karma-row"><span>esperança</span><span class="stars"><%= '★'.repeat(cria) + '☆'.repeat(5-cria) %></span></div>
-          <div class="karma-row"><span>fé</span><span class="stars"><%= '★'.repeat(sexu) + '☆'.repeat(5-sexu) %></span></div>
+          <div class="karma-row"><span>confiabilidade</span><span class="stars"><%= '★'.repeat(conf) + '☆'.repeat(5-conf) %></span></div>
+          <div class="karma-row"><span>criatividade</span><span class="stars"><%= '★'.repeat(cria) + '☆'.repeat(5-cria) %></span></div>
+          <div class="karma-row"><span>sexualidade</span><span class="stars"><%= '★'.repeat(sexu) + '☆'.repeat(5-sexu) %></span></div>
         </div>
         <% } %>
       </div>
       <ul class="stat-list">
-        <li><span>irmãos</span><span><%= irmãos.length %></span></li>
-        <li><span>grupos</span><span><%= grupos.length %></span></li>
-        <li><span>testemunhos</span><span><%= testemunhos.length %></span></li>
-        <li><span>mensagens</span><span><%= mensagens.length %></span></li>
+        <li><span>amigos</span><span><%= amigos.length %></span></li>
+        <li><span>comunidades</span><span><%= comunidades.length %></span></li>
+        <li><span>depoimentos</span><span><%= depoimentos.length %></span></li>
+        <li><span>scraps</span><span><%= scraps.length %></span></li>
       </ul>
     </div>
     <% if (!ehMeuPerfil) { %>
     <div class="panel">
       <div class="panel-body" style="display:flex;flex-direction:column;gap:6px;">
         <% if (!amizade) { %>
-          <form method="POST" action="/irmão/adicionar">
-            <input type="hidden" name="irmão_id" value="<%= perfil.id %>">
-            <button class="btn btn-primary" style="width:100%">+ adicionar irmão</button>
+          <form method="POST" action="/amigo/adicionar">
+            <input type="hidden" name="amigo_id" value="<%= perfil.id %>">
+            <button class="btn btn-primary" style="width:100%">+ adicionar amigo</button>
           </form>
         <% } else if (amizade.status === 'pendente') { %>
           <span style="font-size:12px;color:#888;">solicitação enviada</span>
         <% } else { %>
-          <form method="POST" action="/irmão/remover">
-            <input type="hidden" name="irmão_id" value="<%= perfil.id %>">
-            <button class="btn btn-secondary" style="width:100%">remover irmão</button>
+          <form method="POST" action="/amigo/remover">
+            <input type="hidden" name="amigo_id" value="<%= perfil.id %>">
+            <button class="btn btn-secondary" style="width:100%">remover amigo</button>
           </form>
         <% } %>
-        <a href="/depoimento/<%= perfil.id %>" class="btn btn-secondary" style="text-align:center">escrever testemunho</a>
+        <a href="/depoimento/<%= perfil.id %>" class="btn btn-secondary" style="text-align:center">escrever depoimento</a>
+        <a href="/chat/<%= perfil.id %>" class="btn btn-primary" style="text-align:center">💬 chat</a>
       </div>
     </div>
     <% } else { %>
@@ -109,51 +123,51 @@
 
     <div class="panel">
       <div class="tab-bar">
-        <a href="#" onclick="showTab('mensagens',this);return false;" class="tab active" id="tabl-mensagens">mensagens (<%= mensagens.length %>)</a>
-        <a href="#" onclick="showTab('dep',this);return false;" class="tab" id="tabl-dep">testemunhos (<%= testemunhos.length %>)</a>
-        <a href="#" onclick="showTab('irmãos',this);return false;" class="tab" id="tabl-irmãos">irmãos (<%= irmãos.length %>)</a>
+        <a href="#" onclick="showTab('scraps',this);return false;" class="tab active" id="tabl-scraps">scraps (<%= scraps.length %>)</a>
+        <a href="#" onclick="showTab('dep',this);return false;" class="tab" id="tabl-dep">depoimentos (<%= depoimentos.length %>)</a>
+        <a href="#" onclick="showTab('amigos',this);return false;" class="tab" id="tabl-amigos">amigos (<%= amigos.length %>)</a>
       </div>
-      <div id="sec-mensagens" class="panel-body">
+      <div id="sec-scraps" class="panel-body">
         <form method="POST" action="/scrap/enviar" style="margin-bottom:12px;">
           <input type="hidden" name="para_user_id" value="<%= perfil.id %>">
-          <textarea class="mensagem-input" name="texto" placeholder="escreva um mensagem..."></textarea>
+          <textarea class="scrap-input" name="texto" placeholder="escreva um scrap..."></textarea>
           <div style="display:flex;justify-content:flex-end;margin-top:4px;">
-            <button type="submit" class="btn btn-primary">enviar mensagem</button>
+            <button type="submit" class="btn btn-primary">enviar scrap</button>
           </div>
         </form>
-        <% if (mensagens.length === 0) { %>
-          <p style="font-size:12px;color:#888;">nenhum mensagem ainda.</p>
+        <% if (scraps.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum scrap ainda.</p>
         <% } else { %>
-          <% mensagens.forEach(function(s) { %>
-          <div class="mensagem-item">
-            <a href="/perfil/<%= s.de_user_id %>" class="mensagem-from"><%= s.de_nome %></a>
-            <span class="mensagem-date"><%= new Date(s.created_at).toLocaleDateString('pt-BR') %></span>
-            <div class="mensagem-text"><%= s.texto %></div>
+          <% scraps.forEach(function(s) { %>
+          <div class="scrap-item">
+            <a href="/perfil/<%= s.de_user_id %>" class="scrap-from"><%= s.de_nome %></a>
+            <span class="scrap-date"><%= new Date(s.created_at).toLocaleDateString('pt-BR') %></span>
+            <div class="scrap-text"><%= s.texto %></div>
           </div>
           <% }) %>
         <% } %>
       </div>
       <div id="sec-dep" class="panel-body" style="display:none">
-        <% if (testemunhos.length === 0) { %>
-          <p style="font-size:12px;color:#888;">nenhum testemunho ainda.</p>
+        <% if (depoimentos.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum depoimento ainda.</p>
         <% } else { %>
-          <% testemunhos.forEach(function(d) { %>
+          <% depoimentos.forEach(function(d) { %>
           <div class="dep-item">
             <div class="dep-from">
               <a href="/perfil/<%= d.de_user_id %>"><%= d.de_nome %></a>
-              <span class="stars" style="margin-left:6px;"><%= '★'.repeat(d.caridade) + '☆'.repeat(5-d.caridade) %></span>
+              <span class="stars" style="margin-left:6px;"><%= '★'.repeat(d.confiabilidade) + '☆'.repeat(5-d.confiabilidade) %></span>
             </div>
             <div class="dep-text">"<%= d.texto %>"</div>
           </div>
           <% }) %>
         <% } %>
       </div>
-      <div id="sec-irmãos" class="panel-body" style="display:none">
-        <% if (irmãos.length === 0) { %>
-          <p style="font-size:12px;color:#888;">nenhum irmão ainda.</p>
+      <div id="sec-amigos" class="panel-body" style="display:none">
+        <% if (amigos.length === 0) { %>
+          <p style="font-size:12px;color:#888;">nenhum amigo ainda.</p>
         <% } else { %>
           <div class="friend-grid cols4">
-          <% irmãos.forEach(function(a) { %>
+          <% amigos.forEach(function(a) { %>
             <div class="friend-item">
               <a href="/perfil/<%= a.id %>">
                 <div class="friend-avatar" style="background:#4a90d4;"><%= a.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %></div>
@@ -169,12 +183,12 @@
 
   <div>
     <div class="panel">
-      <div class="panel-header">grupos</div>
+      <div class="panel-header">comunidades</div>
       <div class="panel-body">
-        <% if (grupos.length === 0) { %>
-          <p style="font-size:11px;color:#888;">nenhuma grupo.</p>
+        <% if (comunidades.length === 0) { %>
+          <p style="font-size:11px;color:#888;">nenhuma comunidade.</p>
         <% } else { %>
-          <% grupos.slice(0,5).forEach(function(c) { %>
+          <% comunidades.slice(0,5).forEach(function(c) { %>
           <div class="comm-item">
             <div class="comm-icon"><%= c.icone %></div>
             <div class="comm-name"><a href="/comunidade/<%= c.id %>"><%= c.nome %></a></div>
@@ -189,7 +203,7 @@
 <div id="footer">© 2025 Fraternitas (feito com ❤️ nostalgia)</div>
 <script>
 function showTab(id, el) {
-  ['mensagens','dep','irmãos'].forEach(function(t) {
+  ['scraps','dep','amigos'].forEach(function(t) {
     document.getElementById('sec-'+t).style.display = t===id ? 'block' : 'none';
   });
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -200,5 +214,11 @@ function toggleEdit() {
   p.style.display = p.style.display === 'none' ? 'block' : 'none';
 }
 </script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  window.FRATERNITAS_USER_ID = '<%= usuario ? usuario.id : "" %>';
+  window.FRATERNITAS_USER_NOME = '<%= usuario ? usuario.nome : "" %>';
+</script>
+<script src="/chat.js"></script>
 </body>
 </html>

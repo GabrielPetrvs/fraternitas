@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fraternitas - Chat com <%= amigo.nome %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <style>
+    #chat-box { height: 420px; overflow-y: auto; background: #fffdf8; border: 1px solid #c9a84c; border-radius: 4px; padding: 10px; margin-bottom: 10px; }
+    .chat-msg { margin-bottom: 10px; max-width: 75%; }
+    .chat-msg.meu { margin-left: auto; text-align: right; }
+    .chat-msg.meu .balao { background: linear-gradient(135deg, #d4a843, #8b6914); color: white; border-radius: 12px 12px 2px 12px; }
+    .chat-msg.deles .balao { background: white; border: 1px solid #c9a84c; border-radius: 12px 12px 12px 2px; color: #333; }
+    .balao { padding: 7px 12px; font-size: 13px; line-height: 1.5; display: inline-block; max-width: 100%; word-break: break-word; font-family: Arial, sans-serif; }
+    .chat-meta { font-size: 10px; color: #aaa; margin-top: 2px; font-family: Arial, sans-serif; }
+    .chat-nome { font-size: 11px; font-weight: bold; color: #8b6914; margin-bottom: 2px; font-family: Arial, sans-serif; }
+    #chat-input { width: 100%; padding: 8px; border: 1px solid #c9a84c; border-radius: 3px; font-size: 13px; font-family: Arial, sans-serif; resize: none; height: 50px; background: #fffdf8; }
+    .online-dot { width: 8px; height: 8px; background: #4caf50; border-radius: 50%; display: inline-block; margin-right: 4px; }
+    .offline-dot { width: 8px; height: 8px; background: #aaa; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  </style>
+</head>
+<body>
+<% if (usuario) { %>
+<div id="header"><div id="header-inner">
+  <a href="/inicio" id="logo">Fraternitas</a>
+  <form action="/buscar" method="GET" id="search-form"><input type="text" name="q" placeholder="buscar pessoas..."><button type="submit">buscar</button></form>
+  <nav>
+    <a href="/inicio">início</a>
+    <a href="/perfil">meu perfil</a>
+    <a href="/amigos">amigos</a>
+    <a href="/comunidades">comunidades</a>
+    <a href="/intencoes">✝ orações</a>
+    <a href="/sair">sair</a>
+  </nav>
+</div></div>
+<% } %>
+
+<div id="page">
+  <div style="max-width:600px;">
+    <div class="panel">
+      <div class="panel-header" style="display:flex;align-items:center;gap:8px;">
+        <div class="friend-avatar" style="background:#8b6914;width:32px;height:32px;font-size:12px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;">
+          <%= amigo.nome.split(' ').map(function(n){return n[0]}).join('').slice(0,2).toUpperCase() %>
+        </div>
+        <span id="status-nome"><%= amigo.nome %></span>
+        <span id="status-dot" style="margin-left:4px;font-size:11px;color:#c8e8a0;">● online</span>
+      </div>
+      <div class="panel-body">
+        <div id="chat-box">
+          <% if (historico.length === 0) { %>
+            <p style="text-align:center;color:#aaa;font-size:12px;margin-top:40px;">início da conversa com <%= amigo.nome %> 🕊️</p>
+          <% } else { historico.forEach(function(m) { %>
+            <div class="chat-msg <%= m.de_user_id == usuario.id ? 'meu' : 'deles' %>">
+              <% if (m.de_user_id != usuario.id) { %><div class="chat-nome"><%= m.de_nome %></div><% } %>
+              <div class="balao"><%= m.texto %></div>
+              <div class="chat-meta"><%= new Date(m.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) %></div>
+            </div>
+          <% }) } %>
+        </div>
+        <textarea id="chat-input" placeholder="Digite sua mensagem... (Enter para enviar)"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+          <a href="/perfil/<%= amigo.id %>" style="font-size:12px;">← voltar ao perfil</a>
+          <button onclick="enviarMensagem()" class="btn btn-primary">enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footer">© 2025 Fraternitas — Cor unum et anima una</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+const roomId = '<%= roomId %>';
+const meuId = '<%= usuario.id %>';
+const amigoId = '<%= amigo.id %>';
+const chatBox = document.getElementById('chat-box');
+
+socket.emit('entrar-sala', roomId);
+
+socket.on('nova-mensagem', function(msg) {
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (msg.de_id == meuId ? 'meu' : 'deles');
+  let html = '';
+  if (msg.de_id != meuId) html += '<div class="chat-nome">' + msg.de_nome + '</div>';
+  html += '<div class="balao">' + msg.texto + '</div>';
+  html += '<div class="chat-meta">' + msg.hora + '</div>';
+  div.innerHTML = html;
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+});
+
+socket.on('usuarios-online', function(users) {
+  const amigoOnline = users.find(function(u) { return u.id == amigoId; });
+  const dot = document.getElementById('status-dot');
+  if (amigoOnline) {
+    dot.style.color = '#4caf50';
+    dot.textContent = '● online';
+  } else {
+    dot.style.color = '#aaa';
+    dot.textContent = '● offline';
+  }
+});
+
+function enviarMensagem() {
+  const input = document.getElementById('chat-input');
+  const texto = input.value.trim();
+  if (!texto) return;
+  socket.emit('mensagem-chat', { roomId: roomId, texto: texto, paraId: amigoId });
+  input.value = '';
+  input.focus();
+}
+
+document.getElementById('chat-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    enviarMensagem();
+  }
+});
+
+chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+</body>
+</html>
